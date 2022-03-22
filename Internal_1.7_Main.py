@@ -1,11 +1,29 @@
 #IMPORTS
+import pygame # Used for game window
+import sys # Used to end program
+
+#INITIALIZATION
+pygame.init() 
 
 #VARIABLES
+monitorInfo = pygame.display.Info()
+clock = pygame.time.Clock() # A clock that keeps track of game time
+fps = 30 # The number of frames a second the game is running at
+screen = pygame.display.set_mode((monitorInfo.current_w, monitorInfo.current_h - 20)) # The screen the game is drawn on to
 
 #FUNCTIONS
 
 #MAIN
+while True:
+    screen.fill((0, 0, 0)) # Initialises the screen as plain black
 
+    for event in pygame.event.get(): # Runs for each possible event in pygame
+        if event.type == pygame.QUIT:
+            pygame.quit() # Closes the window
+            sys.exit() # Ends the program
+
+    pygame.display.flip() # Updates the screen
+    clock.tick(fps) # Waits for "fps" milliseconds
 
 #DECOMPOSITION
 """
