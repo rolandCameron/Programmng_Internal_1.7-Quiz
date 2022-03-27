@@ -11,6 +11,7 @@ class Colours: # Colours to be used within the project
     BACKGROUND_C = pygame.Color(1, 117, 15)
     TEXT_C = pygame.Color(0, 0, 0)
     QUESTION_C = pygame.Color(1, 51, 117, 125)
+    QUESTION_SELECTED_C = pygame.Color(1, 51, 51, 125)
 
 class Fonts: # Fonts to be used within the project
     TITLE_F = pygame.font.SysFont('Comic Sans MS', 50)
@@ -26,8 +27,11 @@ page = "Settings" # The page displayed to the user
 
 settingsTitle = Fonts.TITLE_F.render('Select your question and answer types', False, (Colours.TEXT_C)) # The settings title
 
-# An array with all the settings buttons in it
-settingsButtons = np.array([[Fonts.TITLE_F.render('Location', False, (Colours.TEXT_C)), Fonts.TITLE_F.render('Flag', False, (Colours.TEXT_C)), Fonts.TITLE_F.render('Capital', False, (Colours.TEXT_C))], [Fonts.TITLE_F.render('Location', False, (Colours.TEXT_C)), Fonts.TITLE_F.render('Flag', False, (Colours.TEXT_C)), Fonts.TITLE_F.render('Capital', False, (Colours.TEXT_C))]])
+nextText = Fonts.QUESTION_F.render('NEXT?', False, (Colours.TEXT_C)) # A text object with "NEXT?" inside it
+
+# An array with all the settings buttons in it 
+settingsButtons = np.array([[Fonts.QUESTION_F.render('Location', False, (Colours.TEXT_C)), Fonts.QUESTION_F.render('Flag', False, (Colours.TEXT_C)), Fonts.QUESTION_F.render('Capital', False, (Colours.TEXT_C))] for x in range(2)])
+settingsButtonSelected = np.array([[0 for y in range(3)] for x in range(2)]) # Stores the colours of all the settings buttons
 
 #FUNCTIONS
 
@@ -40,17 +44,49 @@ while True:
         pygame.draw.rect(screen, Colours.QUESTION_C, (screen.get_width()/2 - settingsTitle.get_width()/2, 25, screen.get_width()/4 + settingsTitle.get_width()/2, 25 + settingsTitle.get_height()), 0, -1, 100, 100, 100, 100) 
         screen.blit(settingsTitle, ((screen.get_width()/2 - settingsTitle.get_width()/2) + 2, 26)) # Writes the title on top of the rectangle
 
-        for y in range(3): 
-            for x in range(2):
-                topLeftX = (screen.get_width()/4)*(x + 1)
-                topLeftY = screen.get_height() - (screen.get_height()/4)*(y+1)
-                pygame.draw.rect(screen, Colours.QUESTION_C, (topLeftX, topLeftY, settingsButtons[x, y].get_width() + 10, settingsButtons[x, y].get_height() + 10), 0, -1, 50, 50, 50, 50)
-                screen.blit(settingsButtons[x, y], (topLeftX, topLeftY))
+        # Draws the "NEXT" button
+        pygame.draw.rect(screen, Colours.QUESTION_C, (screen.get_width() - nextText.get_width() - 20, screen.get_height() - nextText.get_height() - 20, nextText.get_width(), nextText.get_height()), 0, -1, 100, 100, 100, 100)
+        screen.blit(nextText, (screen.get_width() - nextText.get_width() - 20, screen.get_height() - nextText.get_height() - 20))
+
+        for y in range(3): # Runs for each option available (Flag, Capital, Location)
+            for x in range(2): # Runs for both columns
+                topLeftX = (screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
+                topLeftY = screen.get_height() - (screen.get_height()/4)*(y+1) # Finds the top left y of the given button
+                bColour = Colours.QUESTION_C # Resets the buttons colour
+
+                if settingsButtonSelected[x, y] == 1: # Runs if the button is selected
+                    bColour = Colours.QUESTION_SELECTED_C # Changes the buttons colour so that it shows the user it is selected
+
+                pygame.draw.rect(screen, bColour, (topLeftX, topLeftY, settingsButtons[x, y].get_width() + 10, settingsButtons[x, y].get_height() + 10), 0, -1, 50, 50, 50, 50) # Draws a rectangle in this location
+                screen.blit(settingsButtons[x, y], (topLeftX, topLeftY)) # Draws the text for the button
 
     for event in pygame.event.get(): # Runs for each possible event in pygame
         if event.type == pygame.QUIT:
             pygame.quit() # Closes the window
             sys.exit() # Ends the program
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mousePos = pygame.mouse.get_pos() # Gets the coordinates of the mouse pointer
+            if page == "Settings":
+
+                # This code checks if a button was clicked, runs for each button on the screen
+                for y in range(3): # Runs for each option available (Flag, Capital, Location)
+                    for x in range(2): # Runs for both columns
+                        topLeftX = (screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
+                        topLeftY = screen.get_height() - (screen.get_height()/4)*(y+1) # Finds the top left y of the given button
+                        if mousePos[0] > topLeftX and mousePos[0] < topLeftX + settingsButtons[x, y].get_width() + 10:
+                            if mousePos[1] > topLeftY and mousePos[1] < topLeftY + settingsButtons[x, y].get_height() + 10:
+                                if settingsButtonSelected[x, y] == 0: # Runs if the button isn't selected
+                                    for i in range(3): # Runs for every button in the same column as the one selected
+                                        settingsButtonSelected[x, i] = 0 # Deselects given button
+                                    
+                                    for j in range(2): # Makes sure the user hasn't selected a duplicate answer - question (eg. Capital - Capital, Flag - Flag...) 
+                                        settingsButtonSelected[j, y] = 0 # Deselects given button
+
+                                    settingsButtonSelected[x, y] = 1 # Changes the colour to let the user know it has been selected
+                                else:
+                                    settingsButtonSelected[x, y] = 0
+
 
     pygame.display.flip() # Updates the screen
     clock.tick(fps) # Waits for "fps" milliseconds
