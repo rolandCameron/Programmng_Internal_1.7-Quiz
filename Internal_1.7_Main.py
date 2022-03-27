@@ -44,9 +44,10 @@ while True:
         pygame.draw.rect(screen, Colours.QUESTION_C, (screen.get_width()/2 - settingsTitle.get_width()/2, 25, screen.get_width()/4 + settingsTitle.get_width()/2, 25 + settingsTitle.get_height()), 0, -1, 100, 100, 100, 100) 
         screen.blit(settingsTitle, ((screen.get_width()/2 - settingsTitle.get_width()/2) + 2, 26)) # Writes the title on top of the rectangle
 
-        # Draws the "NEXT" button
-        pygame.draw.rect(screen, Colours.QUESTION_C, (screen.get_width() - nextText.get_width() - 20, screen.get_height() - nextText.get_height() - 20, nextText.get_width(), nextText.get_height()), 0, -1, 100, 100, 100, 100)
-        screen.blit(nextText, (screen.get_width() - nextText.get_width() - 20, screen.get_height() - nextText.get_height() - 20))
+        nextTopLeftX = screen.get_width() - nextText.get_width() - 20
+        nextTopLeftY = screen.get_height() - nextText.get_height() - 20
+        pygame.draw.rect(screen, Colours.QUESTION_C, (nextTopLeftX, nextTopLeftY, nextText.get_width(), nextText.get_height()), 0, -1, 100, 100, 100, 100) # Draws the "NEXT" button
+        screen.blit(nextText, (nextTopLeftX, nextTopLeftY)) # Writes the "NEXT" text
 
         for y in range(3): # Runs for each option available (Flag, Capital, Location)
             for x in range(2): # Runs for both columns
@@ -69,7 +70,7 @@ while True:
             mousePos = pygame.mouse.get_pos() # Gets the coordinates of the mouse pointer
             if page == "Settings":
 
-                # This code checks if a button was clicked, runs for each button on the screen
+                # This code checks if an answer/question button was clicked, runs for each button on the screen
                 for y in range(3): # Runs for each option available (Flag, Capital, Location)
                     for x in range(2): # Runs for both columns
                         topLeftX = (screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
@@ -85,8 +86,13 @@ while True:
 
                                     settingsButtonSelected[x, y] = 1 # Changes the colour to let the user know it has been selected
                                 else:
-                                    settingsButtonSelected[x, y] = 0
+                                    settingsButtonSelected[x, y] = 0 # Deselects the button if it was already selected
 
+                #This code checks if the next button was clicked
+                if mousePos[0] < nextTopLeftX + nextText.get_height() and mousePos[0] > nextTopLeftX:
+                    if mousePos[1] < nextTopLeftY + nextText.get_width() and mousePos[1] > nextTopLeftY:
+                        page = "Config"
+                        print(page)
 
     pygame.display.flip() # Updates the screen
     clock.tick(fps) # Waits for "fps" milliseconds
