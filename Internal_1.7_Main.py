@@ -1,7 +1,7 @@
 #IMPORTS
 import pygame # Used for game window
 import sys # Used to end program
-import numpy as np
+import numpy as np # Used for arrays
 
 #INITIALIZATION
 pygame.init() 
@@ -89,10 +89,15 @@ while True:
                                     settingsButtonSelected[x, y] = 0 # Deselects the button if it was already selected
 
                 #This code checks if the next button was clicked
+                selectedButtons =0
                 if mousePos[0] < nextTopLeftX + nextText.get_height() and mousePos[0] > nextTopLeftX:
                     if mousePos[1] < nextTopLeftY + nextText.get_width() and mousePos[1] > nextTopLeftY:
-                        page = "Config"
-                        print(page)
+                        for y in range(3): # Runs for each option available (Flag, Capital, Location)
+                            for x in range(2): # Runs for both columns
+                                if settingsButtonSelected[x, y] == 1: # If the given button is selected
+                                    selectedButtons += 1
+                        if selectedButtons == 2: # Runs if the user has selected 2 buttons
+                            page = "Config" # Changes page
 
     pygame.display.flip() # Updates the screen
     clock.tick(fps) # Waits for "fps" milliseconds
