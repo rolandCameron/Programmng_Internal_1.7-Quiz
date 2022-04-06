@@ -3,6 +3,7 @@ import pygame # Used for game window
 import sys # Used to end program
 import numpy as np # Used for arrays
 from Pages import settingsPage as settings
+from Pages import questionPage as question
 
 #INITIALIZATION
 pygame.init() 
@@ -25,6 +26,9 @@ screen = pygame.display.set_mode((monitorInfo.current_w, monitorInfo.current_h -
 
 page = "Settings" # The page displayed to the user
 
+questionType = ""
+answerType = ""
+
 settings.initButtons(Fonts.QUESTION_F, Colours.QUESTION_C, Colours.TEXT_C, screen)
 #FUNCTIONS
 
@@ -37,6 +41,10 @@ while True:
 
         settings.printButtons() # Shows all the buttons for the settings screen
 
+    if page == "Questions":
+        question.showQuestion(Colours.QUESTION_C, Fonts.TITLE_F, Colours.TEXT_C, screen)
+        question.showAnswers(Colours.QUESTION_C, Fonts.QUESTION_F, Colours.TEXT_C, screen)
+
     for event in pygame.event.get(): # Runs for each possible event in pygame
         if event.type == pygame.QUIT:
             pygame.quit() # Closes the window
@@ -48,7 +56,10 @@ while True:
                 detection = settings.detectClick(mousePos)
                 if detection != "NONE":
                     page = "Questions"
-                    print(detection)
+                    questionType = detection[0]
+                    answerType = detection[1]
+                    question.newQuestion(questionType, answerType)
+                    
 
     pygame.display.flip() # Updates the screen
     clock.tick(fps) # Waits for "fps" milliseconds
@@ -57,25 +68,21 @@ while True:
 """
 1. Present options for the topic of the quiz
     a. Create a pygame screen
-    b. Present buttons for each of the answers and questions available (Flag - Capital, Capital - Flag, Country - Flag, etc...)
+    b. Present buttons for each of the answers and questions available (Population - Capital, Capital - Population, Country - Population, etc...)
     c. Detect a click on these buttons
     d. Have the user confirm their selection, do not let them select the same answer and question eg. (flag - flag, capital - capital)
 
-2. Allow users to choose the number of questions they want to answer
-    a. Present a new screen of options, as detailed above
-    b. Allow the user to confirm their choices
-
-3. Present questions one by one, with the desired answer option
+2. Present questions one by one, with the desired answer option
     a. Present a question, with the related images
     b. Allow the user to answer in their chosen way
     c. Once they confirm their answer, move onto the next question
 
-4. Once all the questions have been answered, give the user a score
+3. Once all the questions have been answered, give the user a score
     a. Present an end screen
     b. Show the user their score and percentage they got correct
     c. Display their answers, and which ones were correct
 
-5. Ask if the user wants to do another quiz
+4. Ask if the user wants to do another quiz
     a. Allow the user to decide whether or not they want to play again
     b. Let them choose either the same quiz, or to change some of the parameters
 """

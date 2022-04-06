@@ -21,7 +21,7 @@ class Button:
     selected = 0 # A boolean of the buttons selection status
     text = "" # Carries the buttons text
 
-    def __init__(self, label, font, backingColour, tColour, screen):
+    def __init__(self, label, font, backingColour, tColour, screen): # Sets all the parameters for the button
         self.selected = 0
         self.__label = font.render(label, False, tColour)
         self.__backdrop = backingColour
@@ -33,23 +33,23 @@ class Button:
         topLeftX = (self.__screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
         topLeftY = self.__screen.get_height() - (self.__screen.get_height()/5)*(y+1) # Finds the top left y of the given button
 
-        self.__coords = (topLeftX, topLeftY)
+        self.__coords = (topLeftX, topLeftY) # Changes the position of the buton so that it can later be used when detecting clicks
         if self.selected == 1: # Checks if the button is selected
-            selecColour = (self.__backdrop[0] + 10, self.__backdrop[1] + 10, self.__backdrop[2] + 10)
-            pygame.draw.rect(self.__screen, selecColour, (topLeftX - 5, topLeftY - 5, xSize, ySize), 0, -1, 50, 50, 50, 50) # Draws a rectangle for the button to be on
+            selecColour = (self.__backdrop[0] + 10, self.__backdrop[1] + 10, self.__backdrop[2] + 10) # Defines the clour to be used while the button is selected
+            pygame.draw.rect(self.__screen, selecColour, (topLeftX - (xSize/2), topLeftY - (ySize/2), xSize*1.5, ySize*1.5), 0, -1, 50, 50, 50, 50) # Draws a rectangle for the button to be on
         elif self.selected == 0:
-            pygame.draw.rect(self.__screen, self.__backdrop, (topLeftX - 5, topLeftY - 5, xSize, ySize), 0, -1, 50, 50, 50, 50) # Draws a rectangle for the button to be on
-        self.__screen.blit(self.__label, (topLeftX, topLeftY))
+            pygame.draw.rect(self.__screen, self.__backdrop, (topLeftX - (xSize/2), topLeftY - (ySize/2), xSize*1.5, ySize*1.5), 0, -1, 50, 50, 50, 50) # Draws a rectangle for the button to be on
+        self.__screen.blit(self.__label, (topLeftX, topLeftY)) # Writes the actual text onto the screen
     
-    def clickDetection(self, mousePos):
-        if mousePos[0] > self.__coords[0] and mousePos[0] < self.__coords[0] + self.__label.get_width() + 10:
-            if mousePos[1] > self.__coords[1] and mousePos[1] < self.__coords[1] + self.__label.get_height() + 10:
+    def clickDetection(self, mousePos): # Detects if the button has been clicked
+        if mousePos[0] > self.__coords[0] - (xSize/2) and mousePos[0] < self.__coords[0] + xSize*1.5: # Checks if the click was in the x range of the button
+            if mousePos[1] > self.__coords[1] - (ySize/2) and mousePos[1] < self.__coords[1] + ySize*1.5: # Checks if the click was in the y range of the button
                 return True
 
 
-buttons = np.array([[Button for y in range (3)] for x in range(2)]) # An array ot store the answer buttons in
-labels = ["Capital", "Flag", "Location"] # The labels for the buttons
-global nextButton
+buttons = np.array([[Button for y in range (3)] for x in range(2)]) # An array to store the answer buttons in
+labels = ["Capital", "Population", "Country"] # The labels for the buttons
+global nextButton # Initialises the next button
 nextButton = Button
 
 # FUNCTIONS
@@ -87,7 +87,7 @@ def detectClick(mousePos):
             if buttons[x, y].clickDetection(mousePos): # Checks for a click on the given button 
                 if buttons[x, y].selected == 1:
                     buttons[x, y].selected = 0
-                else:
+                else: # Deselcts all the other button in its row and column. This prevents duplicate answers
                     for i in range(3):
                         buttons[x, i].selected = 0
                     for j in range(2):
