@@ -11,10 +11,10 @@ global answers
 global ordAns
 ordAns = []
 
-xSize = 200
+xSize = 400
 ySize = 50
 
-def newQuestion(questionType, answerType, questionsDict):
+def newQuestion(questionType, answerType, questionsDict, qFinished):
     global answers
     global questionText
     global corrAnswer
@@ -38,18 +38,18 @@ def newQuestion(questionType, answerType, questionsDict):
     # Code below inputs the random question into the question presets
     if questionType == "Capital":
         if answerType == "Population":
-            questionText = f"Which {answerType} belongs to the same country as {question[2]}?"
+            questionText = f"Which {answerType} belongs to the same country as {question[2]}? [{qFinished}/10]"
         if answerType == "Country":
-            questionText = f"Which {answerType} is {question[2]} in?"
+            questionText = f"Which {answerType} is {question[2]} in? [{qFinished}/10]"
     
     elif questionType == "Population":
         if answerType == "Capital":
-            questionText = f"Which {answerType} belongs to a country with a population of {question[1]}?"
+            questionText = f"Which {answerType} belongs to a country with a population of {question[1]}? [{qFinished}/10]"
         if answerType == "Country":
-            questionText = f"Which {answerType} has a population of {question[1]}?"
+            questionText = f"Which {answerType} has a population of {question[1]}? [{qFinished}/10]"
     
     elif questionType == "Country":
-        questionText = f"What is the {answerType} of {question[0]}?"
+        questionText = f"What is the {answerType} of {question[0]}? [{qFinished}/10]"
     
     #ANSWERS
     if answerType == "Country": #Works out what type answers should be
@@ -138,4 +138,4 @@ def detectClick(mousePos, screen):
                         return "Incorrect"
             ansNumber += 1
     
-    return "No Button"
+    return "No Click"

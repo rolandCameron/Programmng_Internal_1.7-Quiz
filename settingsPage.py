@@ -35,7 +35,7 @@ class Button:
 
         self.__coords = (topLeftX, topLeftY) # Changes the position of the buton so that it can later be used when detecting clicks
         if self.selected == 1: # Checks if the button is selected
-            selecColour = (self.__backdrop[0] + 10, self.__backdrop[1] + 10, self.__backdrop[2] + 10) # Defines the clour to be used while the button is selected
+            selecColour = (self.__backdrop[0] - 1, self.__backdrop[1] - 40, self.__backdrop[2] - 40) # Defines the clour to be used while the button is selected
             pygame.draw.rect(self.__screen, selecColour, (topLeftX - (xSize/2), topLeftY - (ySize/2), xSize*1.5, ySize*1.5), 0, -1, 50, 50, 50, 50) # Draws a rectangle for the button to be on
         elif self.selected == 0:
             pygame.draw.rect(self.__screen, self.__backdrop, (topLeftX - (xSize/2), topLeftY - (ySize/2), xSize*1.5, ySize*1.5), 0, -1, 50, 50, 50, 50) # Draws a rectangle for the button to be on
@@ -62,8 +62,16 @@ def initButtons(font, colour, tColour, screen): # Initialises the buttons
 
 def showTitle(screen, font, fontColour, backColour): # A function to show the title for the settings page
     settingsTitle = font.render('Select your question and answer types', False, (fontColour)) # The settings title
-    pygame.draw.rect(screen, backColour, (screen.get_width()/2 - settingsTitle.get_width()/2, 25, screen.get_width()/4 + settingsTitle.get_width()/2, 25 + settingsTitle.get_height()), 0, -1, 100, 100, 100, 100) # Draws a rect for the title to go onto
+    pygame.draw.rect(screen, backColour, (screen.get_width()/2 - xSize*2, 25, xSize*4, ySize*2), 0, -1, 100, 100, 100, 100) # Draws a rect for the title to go onto
     screen.blit(settingsTitle, ((screen.get_width()/2 - settingsTitle.get_width()/2) + 2, 26)) # Writes the title on top of the rectangle
+
+    columnTitle = [font.render('Question:', False, (fontColour)), font.render('Answer:', False, (fontColour))]
+    for x in range(2):
+        topLeftX = (screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
+        topLeftY = screen.get_height() - (screen.get_height()/5)*(4)
+
+        pygame.draw.rect(screen, backColour, (topLeftX - xSize/2, topLeftY - ySize/2, xSize*1.5, ySize*2), 0, -1, 50, 50, 50, 50) # Draws a rect for the title to go onto
+        screen.blit(columnTitle[x], (topLeftX, topLeftY))
 
 def printButtons(): # A function to print the settings buttons
     for y in range(3): # Runs for each possible answer - question types
