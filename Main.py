@@ -4,6 +4,7 @@ import sys # Used to end program
 import numpy as np # Used for arrays
 from Pages import settingsPage as settings
 from Pages import questionPage as question
+from Pages import questionsDictionary as qs # A dictionary with all the questions in it
 
 #INITIALIZATION
 pygame.init() 
@@ -13,6 +14,8 @@ class Colours: # Colours to be used within the project
     BACKGROUND_C = (1, 117, 15)
     TEXT_C = (0, 0, 0)
     QUESTION_C = (1, 51, 117)
+    INCORRECT_C = (255, 0, 0)
+    CORRECT_C = (0, 255, 0)
 
 class Fonts: # Fonts to be used within the project
     TITLE_F = pygame.font.SysFont('Comic Sans MS', 50)
@@ -25,6 +28,9 @@ fps = 30 # The number of frames a second the game is running at
 screen = pygame.display.set_mode((monitorInfo.current_w, monitorInfo.current_h - 20)) # The screen the game is drawn on to
 
 page = "Settings" # The page displayed to the user
+
+ansState = "No Click"
+questionAnswered = False
 
 questionType = ""
 answerType = ""
@@ -43,7 +49,7 @@ while True:
 
     if page == "Questions":
         question.showQuestion(Colours.QUESTION_C, Fonts.TITLE_F, Colours.TEXT_C, screen)
-        question.showAnswers(Colours.QUESTION_C, Fonts.QUESTION_F, Colours.TEXT_C, screen)
+        question.showAnswers(ansState, Colours.QUESTION_C, Colours.CORRECT_C, Colours.INCORRECT_C, Fonts.QUESTION_F, Colours.TEXT_C, screen)
 
     for event in pygame.event.get(): # Runs for each possible event in pygame
         if event.type == pygame.QUIT:
@@ -52,14 +58,23 @@ while True:
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             mousePos = pygame.mouse.get_pos() # Gets the coordinates of the mouse pointer
+            
+            if page == "Questions":
+                if questionAnswered:
+                    question.newQuestion(questionType, answerType, qs.questionsDict)
+                    ansState = "No Click"
+                    questionAnswered = False
+                else:
+                    ansState = question.detectClick(mousePos, screen)
+                    questionAnswered = True
+            
             if page == "Settings":
                 detection = settings.detectClick(mousePos)
                 if detection != "NONE":
-                    page = "Questions"
                     questionType = detection[0]
                     answerType = detection[1]
-                    question.newQuestion(questionType, answerType)
-                    
+                    question.newQuestion(questionType, answerType, qs.questionsDict)
+                    page = "Questions"
 
     pygame.display.flip() # Updates the screen
     clock.tick(fps) # Waits for "fps" milliseconds
@@ -75,7 +90,7 @@ while True:
 2. Present questions one by one, with the desired answer option
     a. Present a question, with the related images
     b. Allow the user to answer in their chosen way
-    c. Once they confirm their answer, move onto the next question
+    c. Once the answer has been evaluated, move onto the next question
 
 3. Once all the questions have been answered, give the user a score
     a. Present an end screen
