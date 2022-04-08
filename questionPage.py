@@ -38,18 +38,18 @@ def newQuestion(questionType, answerType, questionsDict, qFinished):
     # Code below inputs the random question into the question presets
     if questionType == "Capital":
         if answerType == "Population":
-            questionText = f"Which {answerType} belongs to the same country as {question[2]}? [{qFinished}/10]"
+            questionText = f"Which {answerType} belongs to the same country as {question[2]}? [{qFinished + 1}/10] Qs Completed"
         if answerType == "Country":
-            questionText = f"Which {answerType} is {question[2]} in? [{qFinished}/10]"
+            questionText = f"Which {answerType} is {question[2]} in? [{qFinished}/10] Qs Completed"
     
     elif questionType == "Population":
         if answerType == "Capital":
-            questionText = f"Which {answerType} belongs to a country with a population of {question[1]}? [{qFinished}/10]"
+            questionText = f"Which {answerType} belongs to a country with a population of {question[1]}? [{qFinished + 1}/10] Qs Completed"
         if answerType == "Country":
-            questionText = f"Which {answerType} has a population of {question[1]}? [{qFinished}/10]"
+            questionText = f"Which {answerType} has a population of {question[1]}? [{qFinished + 1}/10] Qs Completed"
     
     elif questionType == "Country":
-        questionText = f"What is the {answerType} of {question[0]}? [{qFinished}/10]"
+        questionText = f"What is the {answerType} of {question[0]}? [{qFinished + 1}/10] Qs Completed"
     
     #ANSWERS
     if answerType == "Country": #Works out what type answers should be
@@ -122,16 +122,23 @@ def showAnswers(ansEval, bColour, corrColour, incorrColour, font, tColour, scree
         evaledAnswers(corrColour, incorrColour, font, tColour, screen)
 
 def detectClick(mousePos, screen):
+    print(corrAnswer)
+    print(mousePos)
     ansNumber = 0
     for x in range(2):
         for y in range(2):
+            print(ordAns)
+            print(ansNumber)
             answer = ordAns[ansNumber]
 
             topLeftX = (screen.get_width()/3)*(x + 1) # Finds the top left x of the given button
             topLeftY = screen.get_height() - (screen.get_height()/3)*(y+1) # Finds the top left y of the given button
 
+            print(topLeftX, " X")
+            print(topLeftY, " Y")
             if mousePos[0] > (topLeftX - (xSize/2)) and mousePos[0] < (topLeftX + xSize*1.5):
                 if mousePos[1] > (topLeftY - (ySize/2)) and mousePos[1] < (topLeftY + ySize*1.5):
+                    print(answer)
                     if answer == corrAnswer:
                         return "Correct"
                     else:

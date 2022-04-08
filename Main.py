@@ -2,10 +2,10 @@
 import pygame # Used for game window
 import sys # Used to end program
 import numpy as np # Used for arrays
-from Pages import settingsPage as settings
-from Pages import questionPage as question
+from Pages import settingsPage as settings # The settings page code
+from Pages import questionPage as question # The questions page code
 from Pages import questionsDictionary as qs # A dictionary with all the questions in it
-from Pages import statisticsPage as stats
+from Pages import statisticsPage as stats # The statistics page code
 
 #INITIALIZATION
 pygame.init() 
@@ -30,25 +30,22 @@ screen = pygame.display.set_mode((monitorInfo.current_w, monitorInfo.current_h -
 
 global page # The page displayed to the user
 
-global ansState
-global questionAnswered
-global questionsFinished
-global numQCorr
-global totalNumQCompleted
+global ansState # What the user has clicked on, used on the question page
+global questionAnswered # Whether or not the user has answered the current question
+global questionsFinished # How many questions the user has completed of this set (sets are 10 long)
+global numQCorr # The total number of questions the user has gotten correct in this session
+global totalNumQCompleted # The total number of questions the user has answered in this session
 
-global questionType
-global answerType
+global questionType # What the user wants to be asked
+global answerType # What the user wants to answer with
 
-page = "Settings" 
+page = "Settings" # The program starts on the settings page
 
-ansState = "No Click"
-questionAnswered = False
-questionsFinished = 0
+ansState = "No Click" # There shouldn't be anything clicked by default
+questionAnswered = False # The question should be unanswered by default
+questionsFinished = 0 
 numQCorr = 0
 totalNumQCompleted = 0
-
-questionType = ""
-answerType = ""
 
 settings.initButtons(Fonts.QUESTION_F, Colours.QUESTION_C, Colours.TEXT_C, screen)
 #FUNCTIONS
@@ -62,8 +59,9 @@ def softReset(): # To be called when a player wishes to restart the same quiz
     ansState = "No Click"
     questionAnswered = False
 
+    # Generates a new question for the user to see
     question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished)
-    page = "Questions"
+    page = "Questions" # Puts the user back into the quiz
 
 def hardReset(): # To be called when the player wishes to change settings
     global questionType
@@ -79,7 +77,7 @@ def hardReset(): # To be called when the player wishes to change settings
     numQCorr = 0
     totalNumQCompleted = 0
 
-    page = "Settings"
+    page = "Settings" # Puts the user back to the settings page
 
 #MAIN
 while True:
@@ -116,15 +114,12 @@ while True:
                     elif click == 2:
                         pygame.quit() # Closes the window
                         sys.exit() # Ends the program
-                    print(click)
-                    print(page)
 
             if page == "Questions":
                 if questionAnswered:
                     question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished)
                     ansState = "No Click"
                     questionAnswered = False
-                    questionsFinished += 1
                     if questionsFinished == 10:
                         page = "Statistics"
                 else:
@@ -133,7 +128,9 @@ while True:
                         numQCorr += 1
                     
                     if ansState != "No Click":
+                        print(ansState)
                         totalNumQCompleted += 1
+                        questionsFinished += 1
                         questionAnswered = True
             
             if page == "Settings":
@@ -141,7 +138,6 @@ while True:
                 if detection != "NONE":
                     questionType = detection[0]
                     answerType = detection[1]
-                    questionsFinished += 1
                     question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished)
                     page = "Questions"
 
