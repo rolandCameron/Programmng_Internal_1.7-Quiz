@@ -104,42 +104,41 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mousePos = pygame.mouse.get_pos() # Gets the coordinates of the mouse pointer
             
-            if page == "Statistics":
-                click = stats.detectClick(mousePos, screen)
-                if click != "No Click":
-                    if click == 0:
-                        softReset()
-                    elif click == 1:
+            if page == "Statistics": # The clicking logic if the user is on the settings page
+                click = stats.detectClick(mousePos, screen) # Works out what the user has clicked
+                if click != "No Click": # Runs if the user has clicked something
+                    if click == 0: # Runs if the user clicked "Same Quiz?"
+                        softReset() 
+                    elif click == 1: # Runs if the user clicked "Settings Page"
                         hardReset()
-                    elif click == 2:
+                    elif click == 2: # Runs if the user clicked "Quit"
                         pygame.quit() # Closes the window
                         sys.exit() # Ends the program
 
-            if page == "Questions":
-                if questionAnswered:
-                    question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished)
-                    ansState = "No Click"
-                    questionAnswered = False
-                    if questionsFinished == 10:
+            if page == "Questions": # The clicking logic if the user is on the questions page
+                if questionAnswered: # Checks if the question on screen has been answered yet
+                    question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished) # Generates a new questions
+                    ansState = "No Click" # Sets the answer clicked to none
+                    questionAnswered = False # Sets the new question as being unanswered
+                    if questionsFinished == 10: # Stops the quiz and moves to the statistics page if the user has completed 10 questions
                         page = "Statistics"
                 else:
-                    ansState = question.detectClick(mousePos, screen)
-                    if ansState == "Correct":
+                    ansState = question.detectClick(mousePos, screen) # Checks what the user clicked on
+                    if ansState == "Correct": # Increases the number of questions answered correctly by one
                         numQCorr += 1
                     
-                    if ansState != "No Click":
-                        print(ansState)
-                        totalNumQCompleted += 1
-                        questionsFinished += 1
-                        questionAnswered = True
+                    if ansState != "No Click": # Runs if the user clicked on a button
+                        totalNumQCompleted += 1 # Increases the total number of questions completed by one 
+                        questionsFinished += 1 
+                        questionAnswered = True # Sets the current question to having been answered
             
-            if page == "Settings":
-                detection = settings.detectClick(mousePos)
-                if detection != "NONE":
-                    questionType = detection[0]
+            if page == "Settings": # The clicking logic if the user is on the settings page
+                detection = settings.detectClick(mousePos) # Checks what the user clicked on
+                if detection != "NONE": # Runs if the next button was clicked
+                    questionType = detection[0] # Sets the question and answer types for the quiz
                     answerType = detection[1]
-                    question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished)
-                    page = "Questions"
+                    question.newQuestion(questionType, answerType, qs.questionsDict, questionsFinished) # Generates a question to start the quiz with
+                    page = "Questions" 
 
     pygame.display.flip() # Updates the screen
     clock.tick(fps) # Waits for "fps" milliseconds
