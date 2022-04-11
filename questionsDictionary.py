@@ -1,3 +1,4 @@
+# A dictionary containing the Name, Capital and Population of the 121 most populous countries.
 questionsDict = {
 	1: ["China", "1.45 Billion", "Beijing"],
 	2: ["India", "1.4 Billion", "New Delhi"],
