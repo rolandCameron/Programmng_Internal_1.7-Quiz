@@ -8,11 +8,11 @@ import pygame
 import numpy as np
 
 # VARIABLES
-xSize = 250
-ySize = 60
+xSize = 250 # The x Size of the buttons
+ySize = 60 # The y Size of the buttons
 
 
-class Button:
+class Button: # A class for the different settings buttons
     __label = "" # Carries the buttons label object
     __backdrop = () # A tuple that carries the background colour of the button
     __screen = "NONE ASSIGNED" # Will carry the screen object to be printed on to
@@ -23,13 +23,13 @@ class Button:
 
     def __init__(self, label, font, backingColour, tColour, screen): # Sets all the parameters for the button
         self.selected = 0
-        self.__label = font.render(label, False, tColour)
+        self.__label = font.render(label, False, tColour) # Changes the string input to a text object
         self.__backdrop = backingColour
         self.__screen = screen
         self.text = label
 
 
-    def draw(self, x, y):
+    def draw(self, x, y): # Draws the button
         topLeftX = (self.__screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
         topLeftY = self.__screen.get_height() - (self.__screen.get_height()/5)*(y+1) # Finds the top left y of the given button
 
@@ -65,35 +65,35 @@ def showTitle(screen, font, fontColour, backColour): # A function to show the ti
     pygame.draw.rect(screen, backColour, (screen.get_width()/2 - xSize*2, 25, xSize*4, ySize*2), 0, -1, 100, 100, 100, 100) # Draws a rect for the title to go onto
     screen.blit(settingsTitle, ((screen.get_width()/2 - settingsTitle.get_width()/2) + 2, 26)) # Writes the title on top of the rectangle
 
-    columnTitle = [font.render('Question:', False, (fontColour)), font.render('Answer:', False, (fontColour))]
-    for x in range(2):
+    columnTitle = [font.render('Question:', False, (fontColour)), font.render('Answer:', False, (fontColour))] # Creates a list with the text objects of the two column titles
+    for x in range(2): # Runs for each column
         topLeftX = (screen.get_width()/4)*(x + 1) # Finds the top left x of the given button
-        topLeftY = screen.get_height() - (screen.get_height()/5)*(4)
+        topLeftY = screen.get_height() - (screen.get_height()/5)*(4) # Finds the top left y of the title buttons
 
         pygame.draw.rect(screen, backColour, (topLeftX - xSize/2, topLeftY - ySize/2, xSize*1.5, ySize*2), 0, -1, 50, 50, 50, 50) # Draws a rect for the title to go onto
-        screen.blit(columnTitle[x], (topLeftX, topLeftY))
+        screen.blit(columnTitle[x], (topLeftX, topLeftY)) # Draws the text for the titles
 
 def printButtons(): # A function to print the settings buttons
     for y in range(3): # Runs for each possible answer - question types
         for x in range(2): # Runs for the two columns
             buttons[x, y].draw(x, y) # Uses the draw function in the given button
-    nextButton.draw(2, 3)
+    nextButton.draw(2, 3) # Draws the next button
 
-def detectClick(mousePos):
-    numSelected = 0
-    selectedLabels = []
-    if nextButton.clickDetection(mousePos):
+def detectClick(mousePos): # Detects clicks 
+    numSelected = 0 # Sets the number of selected settings buttons to 0
+    selectedLabels = [] # Resets the list of selected buttons
+    if nextButton.clickDetection(mousePos): # Runs if the next button was clicked
         for x in range(2): # Runs for each column
             for y in range(3): # Runs for each possible answer - question types
-                if buttons[x, y].selected == 1:
-                    numSelected += 1
-                    selectedLabels.append(buttons[x, y].text)
-        if numSelected == 2:
+                if buttons[x, y].selected == 1: # Checks if the given button is selected
+                    numSelected += 1 # Increments the number of buttons selected by one
+                    selectedLabels.append(buttons[x, y].text) # Adds the label of the button to the list of selected buttons
+        if numSelected == 2: # If the user has two buttons selected it returns the selected buttons
             return selectedLabels
     for y in range(3): # Runs for each possible answer - question types
         for x in range(2): # Runs for the two columns
             if buttons[x, y].clickDetection(mousePos): # Checks for a click on the given button 
-                if buttons[x, y].selected == 1:
+                if buttons[x, y].selected == 1: # Unselects the clicked button if it was already selected
                     buttons[x, y].selected = 0
                 else: # Deselcts all the other button in its row and column. This prevents duplicate answers
                     for i in range(3):
@@ -101,4 +101,4 @@ def detectClick(mousePos):
                     for j in range(2):
                         buttons[j, y].selected = 0
                     buttons[x, y].selected = 1
-    return "NONE"
+    return "NONE" # Returns if the next button wasn't clicked
