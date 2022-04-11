@@ -35,4 +35,5 @@ def detectClick(mousePos, screen): # Checks what was clicked
             if mousePos[1] > (topLeftY - (ySize/2)) and mousePos[1] < (topLeftY + ySize*3):
                 return y # Returns the button
 
-        return "No Click" # Returns if the user didn't click on a button
+        else:
+            return "No Click" # Returns if the user didn't click on a button
